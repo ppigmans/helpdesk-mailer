@@ -1,0 +1,47 @@
+#!/bin/sh
+apt-get install ssmtp
+chmod 666 /etc/ssmtp/ssmtp.conf
+cp /etc/ssmtp/ssmtp.conf ~/.mail/
+
+echo "als eerst heeft dit script uw wachtwoord nodig, geen zorgen dit wordt niet onthouden"
+echo "WAARSCHUWING: LAAT U NIET AFLEIDEN TIJDENS DEZE STAP!"
+sleep 2
+echo "Typ uw email wachtwoord aub"
+read wachtwoord
+echo "AuthPass=""$wachtwoord" >> /etc/ssmtp/sstmp.conf
+clear
+clear
+sleep 2
+
+echo "typ hier het email adress waar u deze mail wilt naar versturen"
+read email
+
+echo "To: ""$email" >> ~/test2.txt
+
+echo "Typ hier het mail adres van uw zelf" 
+read mail
+echo "AuthUser=""$mail" >> /etc/ssmtp/ssmtp.conf
+echo "AuthPass=""$wachtwoord" >> /etc/ssmtp/ssmtp.conf
+echo "From: ""$mail" >> ~/test2.txt
+
+echo "Typ hier het onderwerp"
+
+read onderwerp
+echo "Subject: ""$onderwerp" >> ~/test2.txt
+
+echo "typ hier uw bericht"
+
+read bericht
+
+echo "$bericht" >> ~/test2.txt
+
+echo >> ~/test2.txt
+echo >> ~/test2.txt
+
+echo "Gestuurt van Intern IP adress:" >> ~/test2.txt
+ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n' >> ~/test2.txt
+echo "gestuurt van Extern IP Adress" >> ~/test2.txt
+curl -s http://ipecho.net/plain >> ~/test2.txt
+sendmail -oi -t < ~/test2.txt
+cp ~/.mail/ssmtp.conf /etc/ssmtp/ssmtp.conf
+rm -rf ~/test2.txt
